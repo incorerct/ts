@@ -16,6 +16,11 @@ const EmployeeManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
+  // For Excel import
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const [excelFile, setExcelFile] = useState(null);
+  const [excelPreview, setExcelPreview] = useState([]);
+
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -140,6 +145,51 @@ const EmployeeManagement = () => {
     XLSX.writeFile(workbook, "Employees.xlsx");
   };
 
+// Handle Excel file selection and preview
+const handleExcelChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setExcelFile(file);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const data = event.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+      const sheetName = workbook.SheetNames[0]; // Assuming first sheet
+      const sheet = workbook.Sheets[sheetName];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }); // Convert sheet to array
+      setExcelPreview(rows.slice(1, 6)); // Skip the first row (headers) and limit to 5 rows for preview
+    };
+    reader.readAsBinaryString(file);
+  }
+};
+
+
+  // Handle importing the Excel data to Firestore
+  const handleImportToFirestore = async () => {
+    if (!excelFile) return;
+
+    try {
+      const rows = excelPreview;
+      const employeesToImport = rows.slice(0).map(row => ({
+        group: row[0],
+        name: row[1],
+        phone: row[2],
+        sap: row[3],
+      }));
+
+      for (let emp of employeesToImport) {
+        await addDoc(collection(db, "employees"), emp);
+      }
+
+      setEmployees((prev) => [...prev, ...employeesToImport]);
+      setImportModalOpen(false);
+      setExcelFile(null);
+      setExcelPreview([]);
+    } catch (error) {
+      console.error("Error importing data:", error);
+    }
+  };
+
   // Handle "Enter" key press to save updates
   const handleKeyDown = (e, field) => {
     if (e.key === "Enter") {
@@ -165,6 +215,11 @@ const EmployeeManagement = () => {
           <button className="export-btn" onClick={exportToExcel}>
             Export to Excel
           </button>
+
+          {/* Import Excel Button */}
+          <button className="import-btn" onClick={() => setImportModalOpen(true)}>
+            Import from Excel
+          </button>
         </div>
       </div>
 
@@ -172,7 +227,7 @@ const EmployeeManagement = () => {
       <table className="employee-table" border="1">
         <thead>
           <tr>
-            <th onClick={() => handleSort("group")}>Group</th> {/* New column for Group */}
+            <th onClick={() => handleSort("group")}>Group</th>
             <th onClick={() => handleSort("name")}>Name</th>
             <th onClick={() => handleSort("phone")}>Phone</th>
             <th onClick={() => handleSort("sap")}>SAP</th>
@@ -259,47 +314,124 @@ const EmployeeManagement = () => {
         </tbody>
       </table>
 
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h2>Add New Employee</h2>
-            <form onSubmit={handleAddEmployee}>
-              <label>Group</label>
-              <input
-                type="text"
-                name="group"
-                value={newEmployee.group}
-                onChange={handleInputChange}
-              />
-              <label>Name</label>
-              <input
-                type="text"
-                name="name"
-                value={newEmployee.name}
-                onChange={handleInputChange}
-              />
-              <label>Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={newEmployee.phone}
-                onChange={handleInputChange}
-              />
-              <label>SAP</label>
-              <input
-                type="text"
-                name="sap"
-                value={newEmployee.sap}
-                onChange={handleInputChange}
-              />
-              <button type="submit">Add Employee</button>
-              <button type="button" onClick={() => setIsModalOpen(false)}>
-                Cancel
-              </button>
-            </form>
-          </div>
+      {/* Modal for importing Excel */}
+      {importModalOpen && (
+  <div className="modal2">
+    <div className="modal-content2">
+      <h2>Import Employees</h2>
+
+      {/* Drag-and-Drop File Upload Box */}
+      <div
+        className="file-upload-box2"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const file = e.dataTransfer.files[0];
+          if (file) {
+            handleExcelChange({ target: { files: [file] } });
+          }
+        }}
+      >
+        <input
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          id="file-input2"
+          onChange={handleExcelChange}
+          className="file-input2-hidden"
+        />
+        <label htmlFor="file-input2" className="file-input2-label">
+          Drag and drop or click to choose
+        </label>
+        <div className="file-name2">{excelFile ? excelFile.name : "No file selected"}</div>
+      </div>
+
+      {/* File Preview */}
+      {excelPreview.length > 0 && (
+        <div className="preview-container2">
+          <h3>Preview (first few rows)</h3>
+          <table className="preview-table2">
+            <thead>
+              <tr>
+                <th>Group</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>SAP</th>
+              </tr>
+            </thead>
+            <tbody>
+              {excelPreview.map((row, index) => (
+                <tr key={index}>
+                  <td>{row[0]}</td>
+                  <td>{row[1]}</td>
+                  <td>{row[2]}</td>
+                  <td>{row[3]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
+
+      {/* Button Row for Import and Close Buttons */}
+      <div className="button-row2">
+        <button className="import-btn2" onClick={handleImportToFirestore}>
+          Import
+        </button>
+        <button className="close-btn2" onClick={() => setImportModalOpen(false)}>
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+{isModalOpen && (
+  <div className="modalq">
+    <div className="modal-contentq">
+      <h2>Add New Employee</h2>
+      <form onSubmit={handleAddEmployee}>
+        <label>Group</label>
+        <input
+          type="text"
+          name="group"
+          value={newEmployee.group}
+          onChange={handleInputChange}
+          className="inputq"
+        />
+        <label>Name</label>
+        <input
+          type="text"
+          name="name"
+          value={newEmployee.name}
+          onChange={handleInputChange}
+          className="inputq"
+        />
+        <label>Phone</label>
+        <input
+          type="text"
+          name="phone"
+          value={newEmployee.phone}
+          onChange={handleInputChange}
+          className="inputq"
+        />
+        <label>SAP</label>
+        <input
+          type="text"
+          name="sap"
+          value={newEmployee.sap}
+          onChange={handleInputChange}
+          className="inputq"
+        />
+        <div className="button-containerq">
+  <button type="submit" className="submit-btnq">Add</button>
+  <button type="button" onClick={() => setIsModalOpen(false)} className="cancel-btnq">Cancel</button>
+</div>
+      </form>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

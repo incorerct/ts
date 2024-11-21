@@ -495,3 +495,264 @@ td {
   background-color: #3e8e41; /* Even darker green on active */
   transform: translateY(0); /* Remove hover effect on click */
 }
+
+
+.import-btn {
+  background-color: #f39c12; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding inside the button */
+  font-size: 15px; /* Larger text */
+  font-weight: bold;
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.import-btn:hover {
+  background-color: #e67e22; /* Darker green on hover */
+}
+
+/* Modal Overlay */
+.modal2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* Modal Content Box */
+.modal-content2 {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Header for Modal */
+.modal-content2 h2 {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Hide the original input */
+.file-input2-hidden {
+  display: none;
+}
+
+.file-upload-box2 {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-upload-box2:hover {
+  background-color: #f9f9f9;
+}
+
+.file-input2-hidden {
+  display: none;
+}
+
+.file-input2-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.button-row2 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+
+/* File name display */
+.file-name2 {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+
+/* File name display box */
+.file-name2 {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #979696;
+  text-align: center;
+  font-size: 0.9em;
+  color: #ffffff;
+  font-weight: bold;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* Preview Container */
+.preview-container2 {
+  margin-top: 20px;
+}
+
+/* Preview Table */
+.preview-table2 {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.preview-table2 th,
+.preview-table2 td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.preview-table2 th {
+  background-color: #e69957;
+  font-weight: bold;
+}
+
+.preview-table2 tr:nth-child(even) {
+  background-color: #e3e3e3;
+}
+
+/* Button Styles */
+.import-btn2 {
+  background-color: #e67e22;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.import-btn2:hover {
+  background-color: #d0690e;
+}
+
+/* Close Button */
+.close-btn2 {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.close-btn2:hover {
+  background-color: #c82333;
+}
+
+/* Modal background */
+.modalq {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content box */
+.modal-contentq {
+  background-color: white;
+  padding: 3px;
+  border-radius: 8px;
+  width: 350px; /* Match input field width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Form labels and input fields */
+label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.inputq {
+  width: 100%;  /* Adjust width to account for padding */
+  padding: 10px;
+  margin: 5px 0 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;  /* Ensures padding and border are included */
+}
+
+
+.inputq:focus {
+  border-color: #f39c12;
+  outline: none;
+}
+/* Button container */
+.button-containerq {
+  display: flex;
+  justify-content: center;  /* Even space between buttons */
+  margin-top: 5px;
+}
+
+/* Buttons */
+.submit-btnq,
+.cancel-btnq {
+  padding: 10px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  width: 35%; /* Ensure both buttons have a similar width */
+}
+
+
+.submit-btnq {
+  background-color: #f39c12;
+  color: white;
+}
+
+.submit-btnq:hover {
+  background-color: #f39c12;
+}
+
+.cancel-btnq {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancel-btnq:hover {
+  background-color: #c82333;
+}
